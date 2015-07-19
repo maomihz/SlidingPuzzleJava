@@ -18,23 +18,24 @@ public class GamePanel extends JPanel implements KeyListener {
 	}
 	
 	public void paintComponent(Graphics g) {
-		try {
-			int[][] gameContent = game.getBoard();
-			
-			for (int i=0;i<gameContent.length;i++) {
-				for (int j=0;j<gameContent[i].length;j++) {
-					if (gameContent[i][j] != 0) {
-						int width = getWidth() / 4;
-						int height = getHeight() / 4;
-						
-						int x = i * width;
-						int y = j * height;
-						
-						g.drawImage(ImageIO.read(new File("res/rect" + gameContent[i][j] + ".png")), x, y, width, height, null);
-					}
+		int[][] gameContent = game.getBoard();
+
+		for (int i = 0; i < gameContent.length; i++) {
+			for (int j = 0; j < gameContent[i].length; j++) {
+				if (gameContent[i][j] != 0) {
+
+					int reference = Math.min(getWidth(), getHeight());
+
+					int size = reference / 4;
+
+					int x = i * (reference / 4);
+					int y = j * (reference / 4);
+
+					g.drawImage(Toolkit.getDefaultToolkit().getImage("res/rect" + gameContent[i][j] + ".png"), x, y,
+							size, size, this);
 				}
 			}
-		} catch (IOException e) {}
+		}
 	}
 	
 	@Override
