@@ -59,16 +59,16 @@ public class Gui extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			game.up();
+			game.move(Board.DIRECTION_UP);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			game.down();
+			game.move(Board.DIRECTION_DOWN);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			game.left();
+			game.move(Board.DIRECTION_LEFT);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			game.right();
+			game.move(Board.DIRECTION_RIGHT);
 		}
 		paintBoard();
 	}
