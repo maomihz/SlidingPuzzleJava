@@ -8,7 +8,7 @@ public class Gui extends JFrame {
 	public Gui(Board board) {
 		super("Sliding Puzzle");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setSize(512, 512);
+		setSize(500, 522);
 		setLocationRelativeTo(null);
 		setFocusable(false);
 
