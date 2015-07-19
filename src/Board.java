@@ -4,8 +4,8 @@ import java.util.Arrays;
 public class Board {
 	public static final Point DIRECTION_DOWN = new Point(0, -1);
 	public static final Point DIRECTION_UP = new Point(0, 1);
-	public static final Point DIRECTION_LEFT = new Point(-1, 0);
-	public static final Point DIRECTION_RIGHT = new Point(1, 0);
+	public static final Point DIRECTION_LEFT = new Point(1, 0);
+	public static final Point DIRECTION_RIGHT = new Point(-1, 0);
 	private int[][] board;
 
 	private Point zeroPos;

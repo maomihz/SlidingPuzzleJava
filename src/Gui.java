@@ -35,7 +35,7 @@ public class Gui extends JFrame implements KeyListener {
 					buttons[i][j] = new JButton();
 					buttons[i][j].setBorderPainted(false);
 					buttons[i][j].setSize(128, 128);
-					buttons[i][j].setLocation(j * 128, i * 128);
+					buttons[i][j].setLocation(i * 128, j * 128);
 					buttons[i][j].setFocusable(false);
 					
 					if (game.getBoard()[i][j] != 0) {
