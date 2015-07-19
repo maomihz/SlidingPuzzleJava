@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class Gui extends JFrame {
+public class Gui extends JFrame implements KeyListener {
 	
 	private Board game;
 	private JPanel panel;
@@ -17,30 +17,7 @@ public class Gui extends JFrame {
 		setLayout(null);
 		setLocationRelativeTo(null);
 		paintBoard();
-		this.addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_UP) {
-					game.up();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					game.down();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-					game.left();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-					game.right();
-				}
-				paintBoard();
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {}
-		});
+		addKeyListener(this);
 	}
 	
 	
@@ -70,4 +47,27 @@ public class Gui extends JFrame {
 	public void setBoard(Board gameBoard) {
 		this.game = gameBoard;
 	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			game.up();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			game.down();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			game.left();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			game.right();
+		}
+		paintBoard();
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 }
