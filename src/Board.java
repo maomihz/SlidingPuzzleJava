@@ -2,60 +2,47 @@ import java.awt.Point;
 import java.util.Arrays;
 
 public class Board {
-	public static final int DIRECTION_UP = 0;
-	public static final int DIRECTION_RIGHT = 1;
-	
-	public static final int DIRECTION_DOWN = 2;
-	public static final int DIRECTION_LEFT = 3;
+	public static final Point DIRECTION_DOWN = new Point(0, -1);
+	public static final Point DIRECTION_UP = new Point(0, 1);
+	public static final Point DIRECTION_LEFT = new Point(-1, 0);
+	public static final Point DIRECTION_RIGHT = new Point(1, 0);
 	private int[][] board;
-	
-	
+
 	private Point zeroPos;
-	
+
 	public Board() {
 		board = new int[4][4];
-		for (int i=0;i<15;i++) {
-			board[i/4][i%4] = i + 1;
+		for (int i = 0; i < 15; i++) {
+			board[i / 4][i % 4] = i + 1;
 		}
 		zeroPos = new Point(3, 3);
 	}
-	
+
 	public Board(Board anoboard) {
 		board = new int[4][4];
-		for (int i=0;i<4;i++) {
-			for (int j=0;j<4;j++) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
 				board[i][j] = anoboard.board[i][j];
 				if (board[i][j] == 0) {
 					zeroPos = new Point(i, j);
 				}
 			}
 		}
-		
 	}
-	
-	//Check whether can move
-	public boolean canMove(int direction) {
-		if(direction == DIRECTION_UP && zeroPos.x != 3) {
+
+	// Check whether can move
+	public boolean canMove(Point direction) {
+		Point p = new Point(direction.x + zeroPos.x, direction.y + zeroPos.y);
+		if (p.x != -1 && p.x != 4 && p.y != -1 && p.y != 4)
 			return true;
-		}
-		if (direction == DIRECTION_DOWN && zeroPos.x != 0) {
-			return true;
-		}
-		if(direction == DIRECTION_LEFT && zeroPos.y != 3) {
-			return true;
-		}
-		if (direction == DIRECTION_RIGHT && zeroPos.y != 0) {
-			return true;
-		}
 		return false;
 	}
-	
-	
+
 	public boolean checkWin() {
-		if (board[3][3] != 0) 
+		if (board[3][3] != 0)
 			return false;
-		for (int i=0;i<4;i++) {
-			for (int j=0;j<4;j++) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
 				if (board[i][j] != i * 4 + j + 1) {
 					if (i != 3 || j != 3)
 						return false;
@@ -67,7 +54,7 @@ public class Board {
 		}
 		return true;
 	}
-	
+
 	public void down() {
 		if (canMove(DIRECTION_DOWN)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x - 1][zeroPos.y];
@@ -75,7 +62,7 @@ public class Board {
 			zeroPos.x -= 1;
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -89,15 +76,15 @@ public class Board {
 			return false;
 		return true;
 	}
-	
+
 	public int[][] getBoard() {
 		return board;
 	}
-	
+
 	public Point getZero() {
 		return zeroPos;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -105,7 +92,7 @@ public class Board {
 		result = prime * result + Arrays.deepHashCode(board);
 		return result;
 	}
-	
+
 	public void left() {
 		if (canMove(DIRECTION_LEFT)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x][zeroPos.y + 1];
@@ -113,28 +100,16 @@ public class Board {
 			zeroPos.y += 1;
 		}
 	}
-	
-	//Move in a specified direction
-	public void move(int direction) {
+
+	public void move(Point direction) {
 		if (canMove(direction)) {
-		switch(direction) {
-		case DIRECTION_UP:
-			up();
-			break;
-		case DIRECTION_DOWN:
-			down();
-			break;
-		case DIRECTION_LEFT:
-			left();
-			break;
-		case DIRECTION_RIGHT:
-			right();
-			break;
-		}
+			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + direction.x][zeroPos.y + direction.y];
+			board[zeroPos.x + direction.x][zeroPos.y + direction.y] = 0;
+			zeroPos.x += direction.x;
+			zeroPos.y += direction.y;
 		}
 	}
-	
-	
+
 	public void right() {
 		if (canMove(DIRECTION_RIGHT)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x][zeroPos.y - 1];
@@ -142,20 +117,28 @@ public class Board {
 			zeroPos.y -= 1;
 		}
 	}
-	
-	
-	
-	//Shuffle, default 300
+
+	// Shuffle, default 300
 	public void shuffle() {
 		this.shuffle(300);
 	}
-	
-
-	
 
 	public void shuffle(int times) {
-		for (int i=0;i<times;i++) {
-			move((int)(Math.random() * 4));
+		for (int i = 0; i < times; i++) {
+			int seed = (int) (Math.random() * 4);
+			switch (seed) {
+			case 0:
+				move(DIRECTION_DOWN);
+				break;
+			case 1:
+				move(DIRECTION_LEFT);
+				break;
+			case 2:
+				move(DIRECTION_RIGHT);
+				break;
+			case 3:
+				move(DIRECTION_UP);
+			}
 		}
 	}
 
@@ -169,7 +152,7 @@ public class Board {
 		return result;
 	}
 
-	//Methods for moving
+	// Methods for moving
 	public void up() {
 		if (canMove(DIRECTION_UP)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + 1][zeroPos.y];
@@ -177,12 +160,13 @@ public class Board {
 			zeroPos.x += 1;
 		}
 	}
+
 	public static void main(String[] args) {
 		Board board = new Board();
 		board.shuffle();
 		Gui window = new Gui(board);
 		window.setVisible(true);
-		
+
 	}
 
 }
