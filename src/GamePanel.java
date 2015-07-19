@@ -4,12 +4,14 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class GamePanel extends JPanel implements KeyListener {
+public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	private static final long serialVersionUID = -6998828044326737584L;
 	private static int MOVE_DURATION = 50;
 	private Board game;
@@ -22,6 +24,7 @@ public class GamePanel extends JPanel implements KeyListener {
 		game = board;
 		setLayout(null);
 		addKeyListener(this);
+		addMouseListener(this);
 		setFocusable(true);
 	}
 
@@ -122,5 +125,45 @@ public class GamePanel extends JPanel implements KeyListener {
 
 	private Image squareImageAt(int i, int j) {
 		return Toolkit.getDefaultToolkit().getImage("res/rect" + game.getBoard()[i][j] + ".png");
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		Point p = new Point(e.getX() / getSquareSize(), e.getY() / getSquareSize());
+		Point zero = game.getZeroPos();
+		
+		//Not valid position
+		if (p.x < 0 || p.x > 3 || p.y < 0 || p.y > 3) {
+			return;
+		}
+		
+		if (p.x - 1 == zero.x && p.y == zero.y) {
+			move(Board.DIRECTION_LEFT);
+		}
+		if (p.x + 1 == zero.x && p.y == zero.y) {
+			move(Board.DIRECTION_RIGHT);
+		}
+		if (p.x == zero.x && p.y - 1 == zero.y) {
+			move(Board.DIRECTION_UP);
+		}
+		if (p.x == zero.x && p.y + 1 == zero.y) {
+			move(Board.DIRECTION_DOWN);
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 	}
 }
