@@ -54,6 +54,9 @@ public class GamePanel extends JPanel implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			move(Board.DIRECTION_RIGHT);
 		}
+		if (game.checkWin() && e.getKeyCode() == KeyEvent.VK_R) {
+			game.shuffle();
+		}
 		repaint();
 		
 
@@ -74,7 +77,7 @@ public class GamePanel extends JPanel implements KeyListener {
 				setupMoving(direction);
 				if (game.checkWin()) {
 					repaint();
-					JOptionPane.showMessageDialog(null, "You Win!!");
+					JOptionPane.showMessageDialog(null, "You Win!! Press R to restart!");
 				}
 			}
 		}
