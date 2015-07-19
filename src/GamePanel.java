@@ -1,62 +1,115 @@
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements KeyListener {
 	private static final long serialVersionUID = -6998828044326737584L;
-	Board game;
-	
+	private static int MOVE_DURATION = 50;
+	private Board game;
+	// 0 for nothing is moving
+	private Point movingDestination;
+	private long startTime;
+	private Point movingDirection;
+
 	public GamePanel(Board board) {
 		game = board;
 		setLayout(null);
 		addKeyListener(this);
 		setFocusable(true);
 	}
-	
+
+	private void finishMoving() {
+		movingDirection = null;
+		startTime = 0;
+		movingDestination = null;
+	}
+
+	private int getSquareSize() {
+		int reference = Math.min(getWidth(), getHeight());
+		return reference / 4;
+	}
+
+	private long getTime() {
+		return new Date().getTime();
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			game.move(Board.DIRECTION_UP);
+			move(Board.DIRECTION_UP);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			game.move(Board.DIRECTION_DOWN);
+			move(Board.DIRECTION_DOWN);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			game.move(Board.DIRECTION_LEFT);
+			move(Board.DIRECTION_LEFT);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			game.move(Board.DIRECTION_RIGHT);
+			move(Board.DIRECTION_RIGHT);
 		}
 		repaint();
 	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {}
-	
-	@Override
-	public void keyTyped(KeyEvent e) {}
 
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	private void move(Point direction) {
+		if (!someIsMoving()) {
+			if (game.canMove(direction)) {
+				game.move(direction);
+				setupMoving(direction);
+			}
+		}
+	}
+
+	@Override
 	public void paintComponent(Graphics g) {
-		int[][] gameContent = game.getBoard();
-
-		for (int i = 0; i < gameContent.length; i++) {
-			for (int j = 0; j < gameContent[i].length; j++) {
-				if (gameContent[i][j] != 0) {
-
-					int reference = Math.min(getWidth(), getHeight());
-
-					int size = reference / 4;
-
-					int x = i * (reference / 4);
-					int y = j * (reference / 4);
-
-					g.drawImage(Toolkit.getDefaultToolkit().getImage("res/rect" + gameContent[i][j] + ".png"), x, y,
-							size, size, this);
+		int size = getSquareSize();
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (someIsMoving() && (movingDestination.x == i && movingDestination.y == j)) {
+					int timeDiff = (int) (getTime() - startTime);
+					if (timeDiff > MOVE_DURATION) {
+						finishMoving();
+						g.drawImage(squareImageAt(i, j), i * size, j * size, size, size, this);
+					} else {
+						// draw the moving square
+						int displacement = size - (int) (((double) timeDiff / MOVE_DURATION) * size);
+						g.drawImage(squareImageAt(i, j), i * size + movingDirection.x * displacement,
+								j * size + movingDirection.y * displacement, size, size, this);
+					}
+				} else {
+					g.drawImage(squareImageAt(i, j), i * size, j * size, size, size, this);
 				}
 			}
 		}
+		repaint();
+	}
+
+	private void setupMoving(Point direction) {
+		movingDestination = new Point(game.getZeroPos().x - direction.x, game.getZeroPos().y - direction.y);
+		startTime = getTime();
+		movingDirection = direction;
+	}
+
+	private boolean someIsMoving() {
+		if (movingDestination == null || movingDirection == null || startTime == 0)
+			return false;
+		return true;
+	}
+
+	private Image squareImageAt(int i, int j) {
+		return Toolkit.getDefaultToolkit().getImage("res/rect" + game.getBoard()[i][j] + ".png");
 	}
 }
