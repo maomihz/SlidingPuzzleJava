@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -11,6 +13,7 @@ public class Gui extends JFrame {
 		setSize(500, 522);
 		setLocationRelativeTo(null);
 		setFocusable(false);
+		setMinimumSize(new Dimension(500, 522));
 
 		panel = new GamePanel(board);
 		getContentPane().add(panel);
