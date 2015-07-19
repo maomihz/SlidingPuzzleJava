@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements KeyListener {
@@ -54,6 +55,8 @@ public class GamePanel extends JPanel implements KeyListener {
 			move(Board.DIRECTION_RIGHT);
 		}
 		repaint();
+		
+
 	}
 
 	@Override
@@ -69,6 +72,10 @@ public class GamePanel extends JPanel implements KeyListener {
 			if (game.canMove(direction)) {
 				game.move(direction);
 				setupMoving(direction);
+				if (game.checkWin()) {
+					repaint();
+					JOptionPane.showMessageDialog(null, "You Win!!");
+				}
 			}
 		}
 	}
@@ -78,27 +85,28 @@ public class GamePanel extends JPanel implements KeyListener {
 		int size = getSquareSize();
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (someIsMoving() && (movingDestination.x == i && movingDestination.y == j)) {
+				if (someIsMoving() && (movingDestination.x == j && movingDestination.y == i)) {
 					int timeDiff = (int) (getTime() - startTime);
 					if (timeDiff > MOVE_DURATION) {
 						finishMoving();
-						g.drawImage(squareImageAt(i, j), i * size, j * size, size, size, this);
+						g.drawImage(squareImageAt(j, i), j * size, i * size, size, size, this);
 					} else {
 						// draw the moving square
-						int displacement = size - (int) (((double) timeDiff / MOVE_DURATION) * size);
-						g.drawImage(squareImageAt(i, j), i * size + movingDirection.x * displacement,
-								j * size + movingDirection.y * displacement, size, size, this);
+						int displacement = size-(int) (((double) timeDiff / MOVE_DURATION) * size);
+						g.drawImage(squareImageAt(j, i), j * size - movingDirection.x * displacement,
+								i * size - movingDirection.y * displacement, size, size, this);
 					}
 				} else {
-					g.drawImage(squareImageAt(i, j), i * size, j * size, size, size, this);
+					g.drawImage(squareImageAt(j, i), j * size, i * size, size, size, this);
 				}
 			}
 		}
 		repaint();
 	}
 
+	//use after move is finished
 	private void setupMoving(Point direction) {
-		movingDestination = new Point(game.getZeroPos().x - direction.x, game.getZeroPos().y - direction.y);
+		movingDestination = new Point(game.getZeroPos().x + direction.x, game.getZeroPos().y + direction.y);
 		startTime = getTime();
 		movingDirection = direction;
 	}

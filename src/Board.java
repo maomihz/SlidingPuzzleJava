@@ -2,17 +2,16 @@ import java.awt.Point;
 import java.util.Arrays;
 
 public class Board {
-	public static final Point DIRECTION_DOWN = new Point(0, -1);
-	public static final Point DIRECTION_UP = new Point(0, 1);
-	public static final Point DIRECTION_LEFT = new Point(1, 0);
-	public static final Point DIRECTION_RIGHT = new Point(-1, 0);
+	public static final Point DIRECTION_DOWN = new Point(0, 1);
+	public static final Point DIRECTION_UP = new Point(0, -1);
+	public static final Point DIRECTION_LEFT = new Point(-1, 0);
+	public static final Point DIRECTION_RIGHT = new Point(1, 0);
 
 	public static void main(String[] args) {
 		Board board = new Board();
 		board.shuffle();
 		Gui window = new Gui(board);
 		window.setVisible(true);
-
 	}
 
 	private int[][] board;
@@ -21,47 +20,27 @@ public class Board {
 
 	public Board() {
 		board = new int[4][4];
-		for (int i = 0; i < 15; i++) {
-			board[i / 4][i % 4] = i + 1;
-		}
-		zeroPos = new Point(3, 3);
-	}
-
-	public Board(Board anoboard) {
-		board = new int[4][4];
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				board[i][j] = anoboard.board[i][j];
-				if (board[i][j] == 0) {
-					zeroPos = new Point(i, j);
-				}
+		int num = 1;
+		for (int i=0;i<4;i++) {
+			for (int j=0;j<4;j++) {
+				board[j][i] = num;
+				num++;
 			}
 		}
+		board[3][3] = 0;
+		zeroPos = new Point(3, 3);
 	}
-
+	
 	// Check whether can move
 	public boolean canMove(Point direction) {
-		Point p = new Point(direction.x + zeroPos.x, direction.y + zeroPos.y);
+		Point p = new Point(zeroPos.x-direction.x,zeroPos.y-direction.y);
 		if (p.x != -1 && p.x != 4 && p.y != -1 && p.y != 4)
 			return true;
 		return false;
 	}
 
 	public boolean checkWin() {
-		if (board[3][3] != 0)
-			return false;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (board[i][j] != i * 4 + j + 1) {
-					if (i != 3 || j != 3)
-						return false;
-					else {
-						return board[i][j] == 0;
-					}
-				}
-			}
-		}
-		return true;
+		return new Board().equals(this);
 	}
 
 	@Override
@@ -96,10 +75,10 @@ public class Board {
 
 	public void move(Point direction) {
 		if (canMove(direction)) {
-			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + direction.x][zeroPos.y + direction.y];
-			board[zeroPos.x + direction.x][zeroPos.y + direction.y] = 0;
-			zeroPos.x += direction.x;
-			zeroPos.y += direction.y;
+			board[zeroPos.x][zeroPos.y] = board[zeroPos.x - direction.x][zeroPos.y - direction.y];
+			board[zeroPos.x - direction.x][zeroPos.y - direction.y] = 0;
+			zeroPos.x -= direction.x;
+			zeroPos.y -= direction.y;
 		}
 	}
 
@@ -129,10 +108,11 @@ public class Board {
 
 	public String toString() {
 		String result = "";
-		for (int[] i : board) {
-			for (int j : i) {
-				result += j + " ";
+		for (int i=0;i<4;i++) {
+			for (int j=0;j<4;j++) {
+				result += board[j][i] + " ";
 			}
+			result+="\n";
 		}
 		return result;
 	}
