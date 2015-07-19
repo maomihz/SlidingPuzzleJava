@@ -55,14 +55,6 @@ public class Board {
 		return true;
 	}
 
-	public void down() {
-		if (canMove(DIRECTION_DOWN)) {
-			board[zeroPos.x][zeroPos.y] = board[zeroPos.x - 1][zeroPos.y];
-			board[zeroPos.x - 1][zeroPos.y] = 0;
-			zeroPos.x -= 1;
-		}
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -93,28 +85,12 @@ public class Board {
 		return result;
 	}
 
-	public void left() {
-		if (canMove(DIRECTION_LEFT)) {
-			board[zeroPos.x][zeroPos.y] = board[zeroPos.x][zeroPos.y + 1];
-			board[zeroPos.x][zeroPos.y + 1] = 0;
-			zeroPos.y += 1;
-		}
-	}
-
 	public void move(Point direction) {
 		if (canMove(direction)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + direction.x][zeroPos.y + direction.y];
 			board[zeroPos.x + direction.x][zeroPos.y + direction.y] = 0;
 			zeroPos.x += direction.x;
 			zeroPos.y += direction.y;
-		}
-	}
-
-	public void right() {
-		if (canMove(DIRECTION_RIGHT)) {
-			board[zeroPos.x][zeroPos.y] = board[zeroPos.x][zeroPos.y - 1];
-			board[zeroPos.x][zeroPos.y - 1] = 0;
-			zeroPos.y -= 1;
 		}
 	}
 
@@ -150,15 +126,6 @@ public class Board {
 			}
 		}
 		return result;
-	}
-
-	// Methods for moving
-	public void up() {
-		if (canMove(DIRECTION_UP)) {
-			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + 1][zeroPos.y];
-			board[zeroPos.x + 1][zeroPos.y] = 0;
-			zeroPos.x += 1;
-		}
 	}
 
 	public static void main(String[] args) {
