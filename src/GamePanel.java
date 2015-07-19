@@ -107,6 +107,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				}
 			}
 		}
+		try {Thread.sleep(10);} catch (InterruptedException e) {}
 		repaint();
 	}
 
