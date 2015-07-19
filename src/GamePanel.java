@@ -1,13 +1,12 @@
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.IOException;
+
+import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements KeyListener {
+	private static final long serialVersionUID = -6998828044326737584L;
 	Board game;
 	
 	public GamePanel(Board board) {
@@ -17,6 +16,29 @@ public class GamePanel extends JPanel implements KeyListener {
 		setFocusable(true);
 	}
 	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			game.move(Board.DIRECTION_UP);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			game.move(Board.DIRECTION_DOWN);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			game.move(Board.DIRECTION_LEFT);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			game.move(Board.DIRECTION_RIGHT);
+		}
+		repaint();
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
 	public void paintComponent(Graphics g) {
 		int[][] gameContent = game.getBoard();
 
@@ -37,27 +59,4 @@ public class GamePanel extends JPanel implements KeyListener {
 			}
 		}
 	}
-	
-	@Override
-	public void keyTyped(KeyEvent e) {}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			game.move(Board.DIRECTION_UP);
-		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			game.move(Board.DIRECTION_DOWN);
-		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			game.move(Board.DIRECTION_LEFT);
-		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			game.move(Board.DIRECTION_RIGHT);
-		}
-		repaint();
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
 }

@@ -6,6 +6,14 @@ public class Board {
 	public static final Point DIRECTION_UP = new Point(0, 1);
 	public static final Point DIRECTION_LEFT = new Point(1, 0);
 	public static final Point DIRECTION_RIGHT = new Point(-1, 0);
+	public static void main(String[] args) {
+		Board board = new Board();
+		board.shuffle();
+		Gui window = new Gui(board);
+		window.setVisible(true);
+
+	}
+
 	private int[][] board;
 
 	private Point zeroPos;
@@ -126,14 +134,6 @@ public class Board {
 			}
 		}
 		return result;
-	}
-
-	public static void main(String[] args) {
-		Board board = new Board();
-		board.shuffle();
-		Gui window = new Gui(board);
-		window.setVisible(true);
-
 	}
 
 }
