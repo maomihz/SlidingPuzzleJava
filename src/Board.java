@@ -102,7 +102,7 @@ public class Board {
 	}
 
 	public void move(Point direction) {
-		if (canMove(DIRECTION_LEFT)) {
+		if (canMove(direction)) {
 			board[zeroPos.x][zeroPos.y] = board[zeroPos.x + direction.x][zeroPos.y + direction.y];
 			board[zeroPos.x + direction.x][zeroPos.y + direction.y] = 0;
 			zeroPos.x += direction.x;
