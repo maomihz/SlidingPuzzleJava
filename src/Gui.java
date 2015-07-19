@@ -4,14 +4,13 @@ import java.awt.event.*;
 
 public class Gui extends JFrame {
 	
-	private Board gameBoard;
+	private Board game;
 	private JPanel panel;
-	
 	private JButton[][] buttons;
 	
 	public Gui(Board board) {
 		super("Sliding Puzzle");
-		gameBoard = board;
+		game = board;
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(612,612);
@@ -20,43 +19,34 @@ public class Gui extends JFrame {
 		paintBoard();
 		this.addKeyListener(new KeyListener() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				
-			}
+			public void keyTyped(KeyEvent e) {}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
-					gameBoard.up();
+					game.up();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					gameBoard.down();
+					game.down();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-					gameBoard.left();
+					game.left();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-					gameBoard.right();
+					game.right();
 				}
 				paintBoard();
 			}
 
 			@Override
-			public void keyReleased(KeyEvent e) {
-				
-				
-			}
-			
+			public void keyReleased(KeyEvent e) {}
 		});
-		
-		this.setFocusable(true);
-		
 	}
 	
 	
 	public void paintBoard() {
 		getContentPane().removeAll();
-		if (gameBoard != null) {
+		if (game != null) {
 			buttons = new JButton[4][4];
 			for (int i=0;i<buttons.length;i++) {
 				for (int j=0;j<buttons.length;j++) {	
@@ -66,8 +56,8 @@ public class Gui extends JFrame {
 					buttons[i][j].setLocation(j * 128, i * 128);
 					buttons[i][j].setFocusable(false);
 					
-					if (gameBoard.getBoard()[i][j] != 0) {
-						buttons[i][j].setIcon(new ImageIcon("res/rect" + Integer.toString(gameBoard.getBoard()[i][j]) + ".png"));
+					if (game.getBoard()[i][j] != 0) {
+						buttons[i][j].setIcon(new ImageIcon("res/rect" + Integer.toString(game.getBoard()[i][j]) + ".png"));
 						this.getContentPane().add(buttons[i][j]);
 					}
 				}
@@ -78,6 +68,6 @@ public class Gui extends JFrame {
 	
 
 	public void setBoard(Board gameBoard) {
-		this.gameBoard = gameBoard;
+		this.game = gameBoard;
 	}
 }
