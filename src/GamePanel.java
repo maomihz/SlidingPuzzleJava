@@ -43,6 +43,27 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		return new Date().getTime();
 	}
 
+	
+
+	private void move(Point direction) {
+		if (!someIsMoving()) {
+			if (game.canMove(direction)) {
+				game.move(direction);
+				setupMoving(direction);
+				if (game.checkWin()) {
+					repaint();
+					JOptionPane.showMessageDialog(null, "You Win!! Press R to restart!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+	}
+	
+	//Keys 
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_K) {
@@ -66,72 +87,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-	}
-
+	public void keyReleased(KeyEvent e) {}
 	@Override
-	public void keyTyped(KeyEvent e) {
-	}
-
-	private void move(Point direction) {
-		if (!someIsMoving()) {
-			if (game.canMove(direction)) {
-				game.move(direction);
-				setupMoving(direction);
-				if (game.checkWin()) {
-					repaint();
-					JOptionPane.showMessageDialog(null, "You Win!! Press R to restart!");
-				}
-			}
-		}
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		int size = getSquareSize();
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (someIsMoving() && (movingDestination.x == j && movingDestination.y == i)) {
-					int timeDiff = (int) (getTime() - startTime);
-					if (timeDiff > MOVE_DURATION) {
-						finishMoving();
-						g.drawImage(squareImageAt(j, i), j * size, i * size, size, size, this);
-					} else {
-						// draw the moving square
-						int displacement = size-(int) (((double) timeDiff / MOVE_DURATION) * size);
-						g.drawImage(squareImageAt(j, i), j * size - movingDirection.x * displacement,
-								i * size - movingDirection.y * displacement, size, size, this);
-					}
-				} else {
-					g.drawImage(squareImageAt(j, i), j * size, i * size, size, size, this);
-				}
-			}
-		}
-		try {Thread.sleep(10);} catch (InterruptedException e) {}
-		repaint();
-	}
-
-	//use after move is finished
-	private void setupMoving(Point direction) {
-		movingDestination = new Point(game.getZeroPos().x + direction.x, game.getZeroPos().y + direction.y);
-		startTime = getTime();
-		movingDirection = direction;
-	}
-
-	private boolean someIsMoving() {
-		if (movingDestination == null || movingDirection == null || startTime == 0)
-			return false;
-		return true;
-	}
-
-	private Image squareImageAt(int i, int j) {
-		return Toolkit.getDefaultToolkit().getImage("res/rect" + game.getBoard()[i][j] + ".png");
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
+	public void keyTyped(KeyEvent e) {}
+	
+	
+	//Mouse
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Point p = new Point(e.getX() / getSquareSize(), e.getY() / getSquareSize());
@@ -155,16 +116,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			move(Board.DIRECTION_DOWN);
 		}
 	}
-
+	
 	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
+	public void mouseClicked(MouseEvent e) {}
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
+	public void mouseReleased(MouseEvent e) {}
 	@Override
-	public void mouseExited(MouseEvent e) {
-	}
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
