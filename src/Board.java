@@ -8,39 +8,43 @@ public class Board {
 	public static final Point DIRECTION_RIGHT = new Point(1, 0);
 
 	public static void main(String[] args) {
-		Board board = new Board();
-		board.shuffle();
+		Board board = new Board(4);
+		//board.shuffle();
 		Gui window = new Gui(board);
 		window.setVisible(true);
 	}
 
 	private int[][] board;
-
 	private Point zeroPos;
+	private int mySize;
 
-	public Board() {
-		board = new int[4][4];
+	public Board(int size) {
+		if (size < 2) {
+			throw new IllegalArgumentException();
+		}
+		mySize = size;
+		board = new int[size][size];
 		int num = 1;
-		for (int i=0;i<4;i++) {
-			for (int j=0;j<4;j++) {
+		for (int i=0;i<mySize;i++) {
+			for (int j=0;j<mySize;j++) {
 				board[j][i] = num;
 				num++;
 			}
 		}
-		board[3][3] = 0;
-		zeroPos = new Point(3, 3);
+		board[size-1][size-1] = 0; //Always set the right bottom 0
+		zeroPos = new Point(size - 1, size - 1);
 	}
 	
 	// Check whether can move
 	public boolean canMove(Point direction) {
-		Point p = new Point(zeroPos.x-direction.x,zeroPos.y-direction.y);
-		if (p.x != -1 && p.x != 4 && p.y != -1 && p.y != 4)
+		Point dst = new Point(zeroPos.x-direction.x,zeroPos.y-direction.y);
+		if (isValid(dst.x, dst.y))
 			return true;
 		return false;
 	}
 
 	public boolean checkWin() {
-		return new Board().equals(this);
+		return new Board(mySize).equals(this);
 	}
 
 	@Override
@@ -56,13 +60,24 @@ public class Board {
 			return false;
 		return true;
 	}
-
-	public int[][] getBoard() {
-		return board;
+	
+	public int getValue(int x, int y) {
+		return board[x][y];
 	}
 
 	public Point getZeroPos() {
 		return zeroPos;
+	}
+	
+	public int getSize() {
+		return mySize;
+	}
+	
+	public boolean isValid(int x, int y) {
+		if (x >= 0 && x < mySize && y >= 0 && y < mySize) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -108,8 +123,8 @@ public class Board {
 
 	public String toString() {
 		String result = "";
-		for (int i=0;i<4;i++) {
-			for (int j=0;j<4;j++) {
+		for (int i=0;i<mySize;i++) {
+			for (int j=0;j<mySize;j++) {
 				result += board[j][i] + " ";
 			}
 			result+="\n";
